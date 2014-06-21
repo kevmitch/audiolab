@@ -629,13 +629,13 @@ broken)"""
             y = self.read_frames_double(nframes)
         elif dtype == np.float32:
             y = self.read_frames_float(nframes)
-        elif dtype == np.int32:
+        elif dtype == np.intc:
             y = self.read_frames_int(nframes)
-        elif dtype == np.int16:
+        elif dtype == np.short:
             y = self.read_frames_short(nframes)
         else:
             print 'yeah'
-            RuntimeError("Sorry, dtype %s not supported" % str(dtype))
+            raise RuntimeError("Sorry, dtype %s not supported" % str(dtype))
 
         if y.shape[1] == 1:
             return y[:, 0]
@@ -668,12 +668,11 @@ broken)"""
         return ty
 
     cdef read_frames_int(Sndfile self, sf_count_t nframes):
-        cdef cnp.ndarray[cnp.int32_t, ndim=2] ty
-        cdef sf_count_t res
-
         # interleaving is correctly handled by C order
-        ty = np.empty((nframes, self._sfinfo.channels),
-                      dtype=np.int32, order='C')
+        # make sure the buffer is the right type of int for sf_readf_int
+        cdef cnp.ndarray ty = np.empty((nframes, self._sfinfo.channels),
+                                       dtype=np.intc, order='C')
+        cdef sf_count_t res
 
         res = sf_readf_int(self.hdl, <int*>ty.data, nframes)
         if not res == nframes:
@@ -681,12 +680,11 @@ broken)"""
         return ty
 
     cdef read_frames_short(Sndfile self, sf_count_t nframes):
-        cdef cnp.ndarray[cnp.int16_t, ndim=2] ty
-        cdef sf_count_t res
-
         # interleaving is correctly handled by C order
-        ty = np.empty((nframes, self._sfinfo.channels),
-                      dtype=np.short, order='C')
+        # make sure the buffer is the right type of int for sf_readf_short
+        cdef cnp.ndarray ty = np.empty((nframes, self._sfinfo.channels),
+                                       dtype=np.short, order='C')
+        cdef sf_count_t res
 
         res = sf_readf_short(self.hdl, <short*>ty.data, nframes)
         if not res == nframes:
