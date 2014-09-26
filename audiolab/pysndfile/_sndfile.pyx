@@ -736,11 +736,11 @@ broken)"""
             res = self.write_frames_double(input, nframes)
         elif input.dtype == np.float32:
             res = self.write_frames_float(input, nframes)
-        elif input.dtype == np.int32:
+        elif input.dtype == np.intc:
             res = self.write_frames_int(input, nframes)
         elif input.dtype == np.int64:
             res = self.write_frames_int((input>>32).astype(np.int32), nframes)
-        elif input.dtype == np.int16:
+        elif input.dtype == np.short:
             res = self.write_frames_short(input, nframes)
         else:
             raise Exception("type of input &s not understood" % str(input.dtype))
@@ -751,25 +751,25 @@ broken)"""
 
     cdef sf_count_t write_frames_double(self, cnp.ndarray input,
                                         sf_count_t nframes):
-        cdef cnp.ndarray[cnp.float64_t, ndim=2] ty
+        # cdef cnp.ndarray[cnp.float64_t, ndim=2] ty
 
         return sf_writef_double(self.hdl, <double*>input.data, nframes)
 
     cdef sf_count_t write_frames_float(self, cnp.ndarray input,
                                        sf_count_t nframes):
-        cdef cnp.ndarray[cnp.float32_t, ndim=2] ty
+        # cdef cnp.ndarray[cnp.float32_t, ndim=2] ty
 
         return sf_writef_float(self.hdl, <float*>input.data, nframes)
 
     cdef sf_count_t write_frames_int(self, cnp.ndarray input,
                                      sf_count_t nframes):
-        cdef cnp.ndarray[cnp.int32_t, ndim=2] ty
+        # cdef cnp.ndarray[cnp.int32_t, ndim=2] ty
 
         return sf_writef_int(self.hdl, <int*>input.data, nframes)
 
     cdef sf_count_t write_frames_short(self, cnp.ndarray input,
                                        sf_count_t nframes):
-        cdef cnp.ndarray[cnp.int16_t, ndim=2] ty
+        # cdef cnp.ndarray[cnp.int16_t, ndim=2] ty
 
         return sf_writef_short(self.hdl, <short*>input.data, nframes)
 
