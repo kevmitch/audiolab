@@ -747,7 +747,7 @@ broken)"""
 
         if not(res == nframes):
             raise IOError("write %d frames, expected to write %d"
-                          % res, nframes)
+                          % (res, nframes))
 
     cdef sf_count_t write_frames_double(self, cnp.ndarray input,
                                         sf_count_t nframes):
